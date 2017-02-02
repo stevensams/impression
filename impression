@@ -1,0 +1,39 @@
+#!/usr/bin/php
+<?php
+/**
+ * Optionally pass iteration count and sleep interval as arguments
+ * Both arguments default to 10
+ *
+ * @example
+ * <code>
+ * impression 10 10
+ * </code>
+ * 
+ */
+
+function impression($sleep = 10) {
+
+    $pages = array(
+        'https://www.google.co.uk' => 'https://www.google.co.uk/search?q=google',
+    );
+
+    foreach($pages as $page => $referer) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $page);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_REFERER, $referer);
+        $html = curl_exec($ch);
+        preg_match("/<title>(.+)<\/title>/siU", $html, $matches);
+        $title = $matches[1];
+        print_r("Page: $title hit! \n");
+        sleep($sleep);
+    }
+}
+
+$iterations = isset($argv[1]) ? $argv[1] : 10;
+$sleep = isset($argv[2]) ? $argv[2] : 10;
+
+for($i = 0; $i < $iterations; $i++) {
+    impression($sleep);
+    print_r("Iteration: $i \n");
+}
