@@ -20,7 +20,6 @@ function impression($sleep = 10) {
     foreach($pages as $page => $referer) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $page);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_REFERER, $referer);
         $html = curl_exec($ch);
         preg_match("/<title>(.+)<\/title>/siU", $html, $matches);
